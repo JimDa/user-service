@@ -20,7 +20,7 @@ public class AdminEndpoint {
     private Map<String, User> globalUserInfo;
 
     @RequestMapping(value = "/all")
-    @PreAuthorize("#oauth2.hasScope('bar') and #oauth2.hasScope('write') and hasRole('ROLE_ADMIN')")
+    @PreAuthorize("#oauth2.hasScope('read') and hasRole('ROLE_ADMIN')")
     public List<User> queryAllUsers() {
         Collection<User> users = globalUserInfo.values();
         return new ArrayList<>(users);

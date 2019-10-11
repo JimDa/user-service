@@ -2,17 +2,18 @@ package com.example.user.config;
 
 
 import com.example.user.CustomClaimVerifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.*;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +22,9 @@ import java.util.Arrays;
 @Configuration
 @EnableResourceServer
 public class ResourceConfig extends ResourceServerConfigurerAdapter {
+    @Autowired
+    private LogoutSuccessHandler customLogoutHandler;
+
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         // @formatter:off
@@ -32,7 +36,13 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .formLogin().permitAll()
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(customLogoutHandler)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+        ;
         // @formatter:on
 
     }

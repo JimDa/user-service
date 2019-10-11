@@ -6,12 +6,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
 @EnableFeignClients
+@EnableOAuth2Client
 public class UserApplication {
 
     public static void main(String[] args) {

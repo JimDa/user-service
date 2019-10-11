@@ -16,4 +16,7 @@ public interface AuthClient {
                         @RequestParam("password") String password,
                         @RequestHeader("Authorization") String authorization
     );
+
+    @RequestMapping(value = "/token", method = RequestMethod.DELETE)
+    Object revoke(@RequestHeader("Authorization") String authorization);
 }
