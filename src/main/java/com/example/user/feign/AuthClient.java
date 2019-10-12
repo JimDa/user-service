@@ -9,14 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "auth-service", url = "http://127.0.0.1:8080/auth-server", path = "/oauth")
 public interface AuthClient {
-
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     OAuthToken getToken(@RequestParam("grant_type") String grantType,
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestHeader("Authorization") String authorization
     );
-
-    @RequestMapping(value = "/token", method = RequestMethod.DELETE)
-    Object revoke(@RequestHeader("Authorization") String authorization);
 }

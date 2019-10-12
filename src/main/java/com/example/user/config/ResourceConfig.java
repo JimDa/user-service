@@ -82,7 +82,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Bean
     public JwtClaimsSetVerifier issuerClaimVerifier() {
         try {
-            return new IssuerClaimVerifier(new URL("http://localhost:8081"));
+            return new IssuerClaimVerifier(new URL("http://localhost:8080"));
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
