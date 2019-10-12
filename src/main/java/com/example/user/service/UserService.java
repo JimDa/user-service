@@ -1,6 +1,6 @@
 package com.example.user.service;
 
-import com.example.user.dto.User;
+import dto.User;
 
 import java.util.Map;
 

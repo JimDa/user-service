@@ -1,6 +1,6 @@
 package com.example.user.endpoints;
 
-import com.example.user.dto.User;
+import dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;

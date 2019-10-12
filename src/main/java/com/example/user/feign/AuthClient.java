@@ -1,6 +1,6 @@
 package com.example.user.feign;
 
-import com.example.user.dto.OAuthToken;
+import dto.OAuthToken;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;

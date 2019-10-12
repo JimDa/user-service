@@ -1,14 +1,13 @@
 package com.example.user.endpoints;
 
-import com.example.user.dto.OAuthToken;
-import com.example.user.dto.User;
 import com.example.user.feign.AuthClient;
 import com.example.user.feign.RevokeTokenClient;
 import com.example.user.service.UserService;
+import dto.OAuthToken;
+import dto.User;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,8 +48,10 @@ public class UserEndpoint {
     @DeleteMapping(value = "/logout")
     public ResponseEntity<String> logout(HttpServletRequest httpServletRequest) {
         String authorization = httpServletRequest.getHeader("Authorization");
-        if (!StringUtils.isEmpty(authorization) && authorization.contains("Bearer")) {
-            revokeTokenClient.revoke(authorization);
+        String value = authorization.replace("Bearer ", "");
+        ResponseEntity<Boolean> responseEntity = revokeTokenClient.revoke(value);
+        if (responseEntity.getStatusCodeValue() != 200 || !responseEntity.getBody()) {
+            return ResponseEntity.ok("退出登录失败！");
         }
         return ResponseEntity.ok("退出登录成功！");
     }
