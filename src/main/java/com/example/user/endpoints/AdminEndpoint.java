@@ -4,6 +4,7 @@ import dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class AdminEndpoint {
     @Qualifier("globalUserInfo")
     private Map<String, User> globalUserInfo;
 
-    @RequestMapping(value = "/all")
+    @GetMapping(value = "/all")
     @PreAuthorize("#oauth2.hasScope('read') and hasRole('ROLE_ADMIN')")
     public List<User> queryAllUsers() {
         Collection<User> users = globalUserInfo.values();
