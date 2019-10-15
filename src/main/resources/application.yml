@@ -19,3 +19,7 @@ spring:
     host: localhost
     port: 6379
     database: 0
+
+ribbon:
+  connect-timeout: 1
+  read-timeout: 600000
