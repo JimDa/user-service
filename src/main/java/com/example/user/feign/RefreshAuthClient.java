@@ -2,6 +2,7 @@ package com.example.user.feign;
 
 import dto.OAuthToken;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface RefreshAuthClient {
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     OAuthToken updateToken(@RequestParam("grant_type") String grantType,
-                           @RequestParam("client_id") String clientId,
-                           @RequestParam("client_secret") String clientSecret,
+                           @RequestHeader("Authorization") String clientAuth,
                            @RequestParam("refresh_token") String refreshToken
     );
 }

@@ -2,6 +2,7 @@ package com.example.user.endpoints;
 
 import com.example.user.feign.RefreshAuthClient;
 import dto.OAuthToken;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,8 @@ public class AuthEndpoint {
 
     @PostMapping("/update-token")
     public ResponseEntity<OAuthToken> updateToken(String refreshToken) {
-        OAuthToken oAuthToken = refreshAuthClient.updateToken("refresh_token", "fooClientIdPassword", "secret", refreshToken);
+        String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
+        OAuthToken oAuthToken = refreshAuthClient.updateToken("refresh_token", "Basic " + tokenStr, refreshToken);
         return ResponseEntity.ok(oAuthToken);
     }
 }
