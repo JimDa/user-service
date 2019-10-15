@@ -7,7 +7,9 @@ import dto.OAuthToken;
 import dto.User;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,9 @@ public class UserEndpoint {
     private AuthClient authClient;
     @Autowired
     private RevokeTokenClient revokeTokenClient;
+    @Autowired
+    @Qualifier(value = "clientDetails")
+    private ResourceOwnerPasswordResourceDetails clientDetails;
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> registerInfo) {
@@ -54,5 +59,10 @@ public class UserEndpoint {
             return ResponseEntity.ok("退出登录失败！");
         }
         return ResponseEntity.ok("退出登录成功！");
+    }
+
+    @GetMapping(value = "/client-details")
+    public ResponseEntity<ResourceOwnerPasswordResourceDetails> get() {
+        return ResponseEntity.ok(clientDetails);
     }
 }
