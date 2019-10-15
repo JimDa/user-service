@@ -1,13 +1,15 @@
-security:
-  oauth2:
-    client:
-      clientId: user-service
-      clientSecret: user-service-secret
-      accessTokenUri: http://localhost:8080/auth-service/oauth/token
-      grant-type: password
-      scope: create,delete,update,read
-    resource:
-      user-info-uri: http://auth-service:5000/uaa/users/current
+#security:
+#  oauth2:
+#    client:
+#      clientId: user-service
+#      clientSecret: user-service-secret
+#      username: user-service
+#      password: user-service-secret
+#      accessTokenUri: http://localhost:8080/auth-service/oauth/token
+#      grant-type: password
+#      scope: create,delete,update,read
+#    resource:
+#      user-info-uri: http://auth-service:5000/uaa/users/current
 
 server:
   port: 8082
