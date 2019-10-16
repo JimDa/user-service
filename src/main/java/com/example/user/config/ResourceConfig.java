@@ -106,21 +106,22 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         return new CustomClaimVerifier();
     }
 
-    @Bean(name = "clientDetails")
-    @ConfigurationProperties(prefix = "security.oauth2.client")
-    public ResourceOwnerPasswordResourceDetails resourceOwnerPasswordResourceDetails() {
-        return new ResourceOwnerPasswordResourceDetails();
-    }
-
-    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor() {
-        return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), resourceOwnerPasswordResourceDetails());
-    }
-
-    @Bean
-    public OAuth2RestTemplate clientCredentialsRestTemplate() {
-        return new OAuth2RestTemplate(resourceOwnerPasswordResourceDetails());
-    }
+//以下注释代码会在feign请求时拦截并自动判断上下文是否含有token并携带到请求头里
+//    @Bean(name = "clientDetails")
+//    @ConfigurationProperties(prefix = "security.oauth2.client")
+//    public ResourceOwnerPasswordResourceDetails resourceOwnerPasswordResourceDetails() {
+//        return new ResourceOwnerPasswordResourceDetails();
+//    }
+//
+//    @Bean
+//    public RequestInterceptor oauth2FeignRequestInterceptor() {
+//        return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), resourceOwnerPasswordResourceDetails());
+//    }
+//
+//    @Bean
+//    public OAuth2RestTemplate clientCredentialsRestTemplate() {
+//        return new OAuth2RestTemplate(resourceOwnerPasswordResourceDetails());
+//    }
 
 
 }

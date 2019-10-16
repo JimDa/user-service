@@ -1,7 +1,7 @@
 package com.example.user.endpoints;
 
 import com.example.user.feign.AuthClient;
-import com.example.user.feign.RevokeTokenClient;
+import com.example.user.feign.RevokeAuthClient;
 import com.example.user.service.UserService;
 import dto.OAuthToken;
 import dto.User;
@@ -23,10 +23,10 @@ public class UserEndpoint {
     @Autowired
     private AuthClient authClient;
     @Autowired
-    private RevokeTokenClient revokeTokenClient;
-    @Autowired
-    @Qualifier(value = "clientDetails")
-    private ResourceOwnerPasswordResourceDetails clientDetails;
+    private RevokeAuthClient revokeAuthClient;
+//    @Autowired
+//    @Qualifier(value = "clientDetails")
+//    private ResourceOwnerPasswordResourceDetails clientDetails;
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> registerInfo) {
@@ -34,7 +34,7 @@ public class UserEndpoint {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/queryUserByName")
+    @GetMapping(value = "/query-user-by-name")
     public ResponseEntity<User> queryUserByName(@RequestParam("userName") String userName) {
         User user = userService.queryUserByName(userName);
         return ResponseEntity.ok(user);
@@ -44,7 +44,7 @@ public class UserEndpoint {
     public ResponseEntity<OAuthToken> getToken(@RequestBody Map<String, String> loginInfo) {
         String username = loginInfo.get("username");
         String password = loginInfo.get("password");
-        String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
+        String tokenStr = Base64.encodeBase64String(("user-service" + ":" + "user-service-secret").getBytes());
 
         OAuthToken token = authClient.getToken("password", username, password, "Basic " + tokenStr);
         return ResponseEntity.ok(token);
@@ -54,15 +54,15 @@ public class UserEndpoint {
     public ResponseEntity<String> logout(HttpServletRequest httpServletRequest) {
         String authorization = httpServletRequest.getHeader("Authorization");
         String value = authorization.replace("Bearer ", "");
-        ResponseEntity<Boolean> responseEntity = revokeTokenClient.revoke(value);
+        ResponseEntity<Boolean> responseEntity = revokeAuthClient.revoke(value);
         if (responseEntity.getStatusCodeValue() != 200 || !responseEntity.getBody()) {
             return ResponseEntity.ok("退出登录失败！");
         }
         return ResponseEntity.ok("退出登录成功！");
     }
 
-    @GetMapping(value = "/client-details")
-    public ResponseEntity<ResourceOwnerPasswordResourceDetails> get() {
-        return ResponseEntity.ok(clientDetails);
-    }
+//    @GetMapping(value = "/client-details")
+//    public ResponseEntity<ResourceOwnerPasswordResourceDetails> get() {
+//        return ResponseEntity.ok(clientDetails);
+//    }
 }
