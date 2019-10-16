@@ -1,11 +1,14 @@
 package com.example.user.service;
 
+import com.example.user.mapper.UserAccountMapper;
 import dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -13,6 +16,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     @Qualifier("globalUserInfo")
     private Map<String, User> globalUserInfo;
+
+    @Autowired
+    private UserAccountMapper userAccountMapper;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -24,26 +30,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String register(Map<String, String> registerInfo) {
-        String username = registerInfo.get("username");
-        if (globalUserInfo.containsKey(username)) {
+    public String register(User registerInfo) {
+        String username = registerInfo.getUsername();
+        List<User> users = userAccountMapper.selectByUsername(registerInfo.getUsername());
+        if (globalUserInfo.containsKey(username) || !CollectionUtils.isEmpty(users)) {
             return String.format("已有用户%s！", username);
         }
-        String password = registerInfo.get("password");
-        String initialRole = "ROLE_PASSENGER";
-        Map.Entry<String, User> entry = globalUserInfo.entrySet().stream().sorted((en1, en2) -> {
-            Integer id1 = en1.getValue().getId();
-            Integer id2 = en2.getValue().getId();
-            if (id1 > id2) {
-                return -1;
-            } else if (id1.equals(id2)) {
-                return 0;
-            } else {
-                return 1;
-            }
-        }).findFirst().get();
-        User user = new User(entry.getValue().getId() + 1, username, bCryptPasswordEncoder.encode(password), initialRole);
-        globalUserInfo.put(username, user);
+        registerInfo.setPassword(bCryptPasswordEncoder.encode(registerInfo.getPassword()));
+        userAccountMapper.insert(registerInfo);
         return "注册成功！";
     }
 }

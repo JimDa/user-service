@@ -7,13 +7,11 @@ import dto.OAuthToken;
 import dto.User;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import javax.validation.Valid;
 
 @RequestMapping("/user")
 @RestController
@@ -29,7 +27,7 @@ public class UserEndpoint {
 //    private ResourceOwnerPasswordResourceDetails clientDetails;
 
     @PostMapping(value = "/register")
-    public ResponseEntity<String> register(@RequestBody Map<String, String> registerInfo) {
+    public ResponseEntity<String> register(@Valid @RequestBody User registerInfo) {
         String result = userService.register(registerInfo);
         return ResponseEntity.ok(result);
     }
@@ -41,12 +39,10 @@ public class UserEndpoint {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<OAuthToken> getToken(@RequestBody Map<String, String> loginInfo) {
-        String username = loginInfo.get("username");
-        String password = loginInfo.get("password");
+    public ResponseEntity<OAuthToken> getToken(@RequestBody User loginInfo) {
         String tokenStr = Base64.encodeBase64String(("user-service" + ":" + "user-service-secret").getBytes());
+        OAuthToken token = authClient.getToken("password", loginInfo.getUsername(), loginInfo.getPassword(), "Basic " + tokenStr);
 
-        OAuthToken token = authClient.getToken("password", username, password, "Basic " + tokenStr);
         return ResponseEntity.ok(token);
     }
 

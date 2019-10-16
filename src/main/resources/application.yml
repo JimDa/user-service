@@ -1,26 +1,32 @@
-security:
-  oauth2:
-    client:
-      clientId: user-service
-      clientSecret: user-service-secret
-      username: user-service
-      password: user-service-secret
-      accessTokenUri: http://localhost:8080/auth-service/oauth/token
-      grant-type: password
-      scope: create,delete,update,read
-    resource:
-      user-info-uri: http://auth-service:5000/uaa/users/current
-
-server:
-  port: 8082
-  servlet:
-    context-path: /user-service
+#security:
+#  oauth2:
+#    client:
+#      clientId: user-service
+#      clientSecret: user-service-secret
+#      username: user-service
+#      password: user-service-secret
+#      accessTokenUri: http://localhost:8080/auth-service/oauth/token
+#      grant-type: password
+#      scope: create,delete,update,read
+#    resource:
+#      user-info-uri: http://auth-service:5000/uaa/users/current
 
 spring:
   redis:
     host: localhost
     port: 6379
     database: 0
+  datasource:
+    user-service:
+      jdbc-url: jdbc:mysql://localhost:3306/auth?useSSL=FALSE&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+      username: dpc
+      password: dpc123
+#      driver-class-name: com.mysql.jdbc.Driver
+
+server:
+  port: 8082
+  servlet:
+    context-path: /user-service
 
 ribbon:
   connect-timeout: 1
