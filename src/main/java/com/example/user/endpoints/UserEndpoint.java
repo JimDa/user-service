@@ -5,6 +5,8 @@ import com.example.user.feign.RevokeAuthClient;
 import com.example.user.service.UserService;
 import dto.OAuthToken;
 import dto.User;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 
 @RequestMapping("/user")
 @RestController
+@Api("主干接口：登入登出以及注册")
 public class UserEndpoint {
     @Autowired
     private UserService userService;
@@ -27,12 +30,14 @@ public class UserEndpoint {
 //    private ResourceOwnerPasswordResourceDetails clientDetails;
 
     @PostMapping(value = "/register")
+    @ApiOperation("注册")
     public ResponseEntity<String> register(@Valid @RequestBody User registerInfo) {
         String result = userService.register(registerInfo);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "/login")
+    @ApiOperation("登录")
     public ResponseEntity<OAuthToken> getToken(@RequestBody @Valid User loginInfo) {
         String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
         OAuthToken token = authClient.getToken("password", loginInfo.getUsername(), loginInfo.getPassword(), "Basic " + tokenStr);
@@ -40,6 +45,7 @@ public class UserEndpoint {
     }
 
     @DeleteMapping(value = "/logout")
+    @ApiOperation("登出")
     public ResponseEntity<String> logout(HttpServletRequest httpServletRequest) {
         String authorization = httpServletRequest.getHeader("Authorization");
         String value = authorization.replace("Bearer ", "");

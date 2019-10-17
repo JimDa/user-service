@@ -2,6 +2,7 @@ package com.example.user.endpoints;
 
 import com.example.user.feign.RefreshAuthClient;
 import dto.OAuthToken;
+import io.swagger.annotations.Api;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Api("权限刷新")
 @RequestMapping("/auth-management")
 public class AuthEndpoint {
     @Autowired
