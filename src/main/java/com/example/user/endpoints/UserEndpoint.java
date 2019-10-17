@@ -32,8 +32,7 @@ public class UserEndpoint {
     @PostMapping(value = "/register")
     @ApiOperation("注册")
     public ResponseEntity<String> register(@Valid @RequestBody User registerInfo) {
-        String result = userService.register(registerInfo);
-        return ResponseEntity.ok(result);
+        return userService.register(registerInfo);
     }
 
     @PostMapping(value = "/login")

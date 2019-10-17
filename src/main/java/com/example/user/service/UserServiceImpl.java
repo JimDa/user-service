@@ -3,6 +3,7 @@ package com.example.user.service;
 import com.example.user.mapper.UserAccountMapper;
 import dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +25,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String register(User registerInfo) {
+    public ResponseEntity<String> register(User registerInfo) {
         String username = registerInfo.getUsername();
         User user = userAccountMapper.selectByUsername(registerInfo.getUsername());
         if (null != user) {
-            return String.format("已有用户%s！", username);
+            return ResponseEntity.status(400).body(String.format("已有用户%s！", username));
         }
         registerInfo.setCreateDate(new Date());
         registerInfo.setCreator(registerInfo.getUsername());
         registerInfo.setPassword(bCryptPasswordEncoder.encode(registerInfo.getPassword()));
         userAccountMapper.insert(registerInfo);
-        return "注册成功！";
+        return ResponseEntity.ok("注册成功！");
     }
 
     @Override
