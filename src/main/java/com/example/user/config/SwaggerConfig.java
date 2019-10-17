@@ -21,7 +21,6 @@ import java.util.Arrays;
 @EnableSwagger2
 @Configuration
 public class SwaggerConfig {
-
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -62,7 +61,7 @@ public class SwaggerConfig {
     private AuthorizationScope[] scopes() {
         AuthorizationScope[] scopes = {
                 new AuthorizationScope("read", "for read operations"),
-                new AuthorizationScope("write", "for write operations"),
+                new AuthorizationScope("create", "for create operations"),
                 new AuthorizationScope("delete", "for delete operations"),
                 new AuthorizationScope("update", "for update operations")};
         return scopes;
