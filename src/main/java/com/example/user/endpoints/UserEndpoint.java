@@ -33,10 +33,9 @@ public class UserEndpoint {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<OAuthToken> getToken(@RequestBody User loginInfo) {
+    public ResponseEntity<OAuthToken> getToken(@RequestBody @Valid User loginInfo) {
         String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
         OAuthToken token = authClient.getToken("password", loginInfo.getUsername(), loginInfo.getPassword(), "Basic " + tokenStr);
-
         return ResponseEntity.ok(token);
     }
 

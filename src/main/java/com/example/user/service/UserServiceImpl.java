@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,5 +35,11 @@ public class UserServiceImpl implements UserService {
         registerInfo.setPassword(bCryptPasswordEncoder.encode(registerInfo.getPassword()));
         userAccountMapper.insert(registerInfo);
         return "注册成功！";
+    }
+
+    @Override
+    public List<User> queryAll() {
+        List<User> allUsers = userAccountMapper.selectAllUsers();
+        return allUsers;
     }
 }

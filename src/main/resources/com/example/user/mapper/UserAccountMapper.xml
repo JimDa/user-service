@@ -13,9 +13,16 @@
         <result column="creator" property="creator" jdbcType="VARCHAR"/>
         <result column="editor" property="editor" jdbcType="VARCHAR"/>
         <result column="edit_date" property="editDate" jdbcType="TIMESTAMP"/>
+        <collection property="roles" ofType="string" column="role_item">
+            <result column="role_name" jdbcType="VARCHAR"/>
+        </collection>
     </resultMap>
     <select id="selectByUsername" parameterType="string" resultMap="userResultMap">
-        select id,username,email,password,gender,birth_date,create_date,creator,editor,edit_date from oauth_user_account where username = #{username,jdbcType=VARCHAR}
+        select temp.*,our.name role_name from
+        (select oua.*,ourr.role_id from oauth_user_account oua
+        left join oauth_user_role_rels ourr on oua.id = ourr.user_id) temp
+        left join oauth_user_role our on temp.role_id = our.id
+         where temp.username = #{username,jdbcType=VARCHAR}
     </select>
     <insert id="insert" parameterType="dto.User">
         insert into oauth_user_account (username,email,password,gender,birth_date,create_date,creator,editor,edit_date)
@@ -30,5 +37,12 @@
         #{editor,jdbcType=VARCHAR},
         #{editDate,jdbcType=TIMESTAMP})
     </insert>
+
+    <select id="selectAllUsers" resultType="list" resultMap="userResultMap">
+                select temp.*,our.name role_name from
+        (select oua.*,ourr.role_id from oauth_user_account oua
+        left join oauth_user_role_rels ourr on oua.id = ourr.user_id) temp
+        left join oauth_user_role our on temp.role_id = our.id
+    </select>
 
 </mapper>

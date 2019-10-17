@@ -1,29 +1,26 @@
 package com.example.user.endpoints;
 
+import com.example.user.service.UserService;
 import dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping(value = "/user-management")
 @RestController
 public class AdminEndpoint {
     @Autowired
-    @Qualifier("globalUserInfo")
-    private Map<String, User> globalUserInfo;
+    private UserService userService;
 
     @GetMapping(value = "/all")
     @PreAuthorize("#oauth2.hasScope('read') and hasRole('ROLE_ADMIN')")
-    public List<User> queryAllUsers() {
-        Collection<User> users = globalUserInfo.values();
-        return new ArrayList<>(users);
+    public ResponseEntity<List<User>> queryAllUsers() {
+        List<User> allUsers = userService.queryAll();
+        return ResponseEntity.ok(allUsers);
     }
 }
