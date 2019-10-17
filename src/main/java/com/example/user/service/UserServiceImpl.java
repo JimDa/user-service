@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
         registerInfo.setCreator(registerInfo.getUsername());
         registerInfo.setPassword(bCryptPasswordEncoder.encode(registerInfo.getPassword()));
         userAccountMapper.insert(registerInfo);
+        userAccountMapper.relateRole(registerInfo.getId(), 3);
         return ResponseEntity.ok("注册成功！");
     }
 

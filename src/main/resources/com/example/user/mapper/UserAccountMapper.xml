@@ -24,7 +24,7 @@
         left join oauth_user_role our on temp.role_id = our.id
          where temp.username = #{username,jdbcType=VARCHAR}
     </select>
-    <insert id="insert" parameterType="dto.User">
+    <insert id="insert" parameterType="dto.User" useGeneratedKeys="true" keyProperty="id">
         insert into oauth_user_account (username,email,password,gender,birth_date,create_date,creator,editor,edit_date)
         values (
         #{username,jdbcType=VARCHAR},
@@ -44,5 +44,10 @@
         left join oauth_user_role_rels ourr on oua.id = ourr.user_id) temp
         left join oauth_user_role our on temp.role_id = our.id
     </select>
+
+    <insert id="relateRole">
+        insert into oauth_user_role_rels (user_id,role_id)
+        values (#{userId,jdbcType=INTEGER},#{roleId,jdbcType=INTEGER})
+    </insert>
 
 </mapper>

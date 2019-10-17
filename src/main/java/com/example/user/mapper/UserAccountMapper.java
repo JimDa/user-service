@@ -13,4 +13,6 @@ public interface UserAccountMapper {
     void insert(User registerInfo);
 
     List<User> selectAllUsers();
+
+    void relateRole(@Param("userId") Integer id, @Param("roleId") Integer i);
 }
