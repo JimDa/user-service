@@ -32,15 +32,9 @@ public class UserEndpoint {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/query-user-by-name")
-    public ResponseEntity<User> queryUserByName(@RequestParam("userName") String userName) {
-        User user = userService.queryUserByName(userName);
-        return ResponseEntity.ok(user);
-    }
-
     @PostMapping(value = "/login")
     public ResponseEntity<OAuthToken> getToken(@RequestBody User loginInfo) {
-        String tokenStr = Base64.encodeBase64String(("user-service" + ":" + "user-service-secret").getBytes());
+        String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
         OAuthToken token = authClient.getToken("password", loginInfo.getUsername(), loginInfo.getPassword(), "Basic " + tokenStr);
 
         return ResponseEntity.ok(token);
