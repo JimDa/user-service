@@ -3,6 +3,7 @@ package com.example.user.endpoints;
 import com.example.user.service.UserService;
 import dto.User;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,7 @@ public class AdminEndpoint {
     private UserService userService;
 
     @GetMapping(value = "/all")
+    @ApiOperation("获取所有用户信息")
     @PreAuthorize("#oauth2.hasScope('read') and hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<User>> queryAllUsers() {
         List<User> allUsers = userService.queryAll();

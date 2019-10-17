@@ -3,18 +3,12 @@ package com.example.user.config;
 
 import com.example.user.CustomClaimVerifier;
 import com.example.user.CustomRedisTokenStore;
-import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -44,7 +38,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/**", "/actuator/**", "/auth-management/**").permitAll()
+                .antMatchers("/user/**", "/actuator/**", "/auth-management/**", "/v2/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
