@@ -1,7 +1,7 @@
 package com.example.user.endpoints;
 
 import com.example.user.service.UserService;
-import dto.User;
+import domain.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -81,7 +81,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("user-service")
                 .description("接口文档说明")
-                .contact(new Contact("jim", "", "1085529137@qq.com"))
+                .contact(new Contact("jim", "www.ez-blog.com", "1085529137@qq.com"))
                 .version("1.0")
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.example.user.service;
 
-import dto.User;
+import domain.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

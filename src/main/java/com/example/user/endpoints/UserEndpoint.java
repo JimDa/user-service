@@ -2,9 +2,10 @@ package com.example.user.endpoints;
 
 import com.example.user.feign.AuthClient;
 import com.example.user.feign.RevokeAuthClient;
+import com.example.user.service.IAlismsService;
 import com.example.user.service.UserService;
+import domain.User;
 import dto.OAuthToken;
-import dto.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.binary.Base64;
@@ -25,9 +26,8 @@ public class UserEndpoint {
     private AuthClient authClient;
     @Autowired
     private RevokeAuthClient revokeAuthClient;
-//    @Autowired
-//    @Qualifier(value = "clientDetails")
-//    private ResourceOwnerPasswordResourceDetails clientDetails;
+    @Autowired
+    private IAlismsService iAlismsService;
 
     @PostMapping(value = "/register")
     @ApiOperation("注册")
@@ -36,7 +36,7 @@ public class UserEndpoint {
     }
 
     @PostMapping(value = "/login")
-    @ApiOperation("登录")
+    @ApiOperation("登入")
     public ResponseEntity<OAuthToken> getToken(@RequestBody @Valid User loginInfo) {
         String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
         OAuthToken token = authClient.getToken("password", loginInfo.getUsername(), loginInfo.getPassword(), "Basic " + tokenStr);
@@ -50,13 +50,9 @@ public class UserEndpoint {
         String value = authorization.replace("Bearer ", "");
         ResponseEntity<Boolean> responseEntity = revokeAuthClient.revoke(value);
         if (responseEntity.getStatusCodeValue() != 200 || !responseEntity.getBody()) {
-            return ResponseEntity.ok("退出登录失败！");
+            return ResponseEntity.status(500).body("退出登录失败！");
         }
         return ResponseEntity.ok("退出登录成功！");
     }
 
-//    @GetMapping(value = "/client-details")
-//    public ResponseEntity<ResourceOwnerPasswordResourceDetails> get() {
-//        return ResponseEntity.ok(clientDetails);
-//    }
 }

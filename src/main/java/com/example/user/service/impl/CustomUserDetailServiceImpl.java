@@ -1,6 +1,7 @@
-package com.example.user.service;
+package com.example.user.service.impl;
 
-import dto.User;
+import com.example.user.service.UserService;
+import domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailService implements UserDetailsService {
+public class CustomUserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 

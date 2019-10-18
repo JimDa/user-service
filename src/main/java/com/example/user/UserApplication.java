@@ -39,5 +39,4 @@ public class UserApplication {
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         return jackson2JsonRedisSerializer;
     }
-
 }
