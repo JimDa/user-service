@@ -38,7 +38,13 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/**", "/actuator/**", "/auth-management/**", "/v2/**").permitAll()
+                .antMatchers(
+                        "/user/**",
+                        "/actuator/**",
+                        "/auth-management/**",
+                        "/v2/**",
+                        "/sms/**"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()

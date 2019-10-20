@@ -8,8 +8,10 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
+import com.example.user.mapper.ThirdPartyServiceMapper;
 import com.example.user.service.IAlismsService;
 import com.google.gson.Gson;
+import domain.ThirdPartyServiceAccess;
 import dto.AliSmsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,13 @@ import java.util.Random;
 public class AlismsServiceImpl implements IAlismsService {
     @Autowired
     private Gson gson = new Gson();
+    @Autowired
+    private ThirdPartyServiceMapper thirdPartyServiceMapper;
 
     @Override
     public AliSmsResponse sendMessage(String phoneNum) {
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "xx", "xx");
+        ThirdPartyServiceAccess access = thirdPartyServiceMapper.queryByServiceName("aliSms");
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", access.getAccessKey(), access.getAccessSecret());
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = new CommonRequest();
         request.setMethod(MethodType.POST);

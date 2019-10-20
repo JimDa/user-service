@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.user.mapper.ThirdPartyServiceMapper">
+    <resultMap id="thirdPartyResultMap" type="domain.ThirdPartyServiceAccess">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="service_name" property="serviceName" jdbcType="VARCHAR"/>
+        <result column="access_key" property="accessKey" jdbcType="VARCHAR"/>
+        <result column="access_secret" property="accessSecret" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="queryByServiceName" parameterType="string" resultMap="thirdPartyResultMap">
+        select * from oauth_third_party_access where service_name = #{serviceName,jdbcType=VARCHAR}
+    </select>
+</mapper>
