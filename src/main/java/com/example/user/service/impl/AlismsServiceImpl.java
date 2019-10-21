@@ -14,9 +14,11 @@ import com.google.gson.Gson;
 import domain.ThirdPartyServiceAccess;
 import dto.AliSmsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AlismsServiceImpl implements IAlismsService {
@@ -24,6 +26,8 @@ public class AlismsServiceImpl implements IAlismsService {
     private Gson gson = new Gson();
     @Autowired
     private ThirdPartyServiceMapper thirdPartyServiceMapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public AliSmsResponse sendMessage(String phoneNum) {
@@ -39,12 +43,14 @@ public class AlismsServiceImpl implements IAlismsService {
         request.putQueryParameter("PhoneNumbers", phoneNum);
         request.putQueryParameter("SignName", "ezblog短信验证");
         request.putQueryParameter("TemplateCode", "SMS_175572254");
-        request.putQueryParameter("TemplateParam", String.format("{\"code\":\"%s\"}", getRandomCode()));
+        String verifyCode = getRandomCode();
+        request.putQueryParameter("TemplateParam", String.format("{\"code\":\"%s\"}", verifyCode));
         String message = null;
         try {
             CommonResponse response = client.getCommonResponse(request);
             System.out.println(response.getData());
             message = response.getData();
+            stringRedisTemplate.opsForValue().set("ALI_SMS:".concat(phoneNum), verifyCode, 5, TimeUnit.MINUTES);
         } catch (ServerException e) {
             e.printStackTrace();
         } catch (ClientException e) {
