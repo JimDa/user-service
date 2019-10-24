@@ -29,7 +29,7 @@ public class CustomRedisTokenStore implements TokenStore {
     private static final String REFRESH = "refresh:";
     private static final String REFRESH_TO_ACCESS = "refresh_to_access:";
     private static final String CLIENT_ID_TO_ACCESS = "client_id_to_access:";
-    private static final String UNAME_TO_ACCESS = "uname_to_access:";
+    private static final String UCREDENTIAL_TO_ACCESS = "user_credential_to_access:";
 
     private final RedisConnectionFactory connectionFactory;
     private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
@@ -151,7 +151,7 @@ public class CustomRedisTokenStore implements TokenStore {
         byte[] accessKey = serializeKey(ACCESS + token.getValue());
         byte[] authKey = serializeKey(AUTH + token.getValue());
         byte[] authToAccessKey = serializeKey(AUTH_TO_ACCESS + authenticationKeyGenerator.extractKey(authentication));
-        byte[] approvalKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(authentication));
+        byte[] approvalKey = serializeKey(UCREDENTIAL_TO_ACCESS + getApprovalKey(authentication));
         byte[] clientId = serializeKey(CLIENT_ID_TO_ACCESS + authentication.getOAuth2Request().getClientId());
 
         RedisConnection conn = getConnection();
@@ -247,7 +247,7 @@ public class CustomRedisTokenStore implements TokenStore {
             if (authentication != null) {
                 String key = authenticationKeyGenerator.extractKey(authentication);
                 byte[] authToAccessKey = serializeKey(AUTH_TO_ACCESS + key);
-                byte[] unameKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(authentication));
+                byte[] unameKey = serializeKey(UCREDENTIAL_TO_ACCESS + getApprovalKey(authentication));
                 byte[] clientId = serializeKey(CLIENT_ID_TO_ACCESS + authentication.getOAuth2Request().getClientId());
                 conn.openPipeline();
                 conn.del(authToAccessKey);
@@ -353,7 +353,7 @@ public class CustomRedisTokenStore implements TokenStore {
 
     @Override
     public Collection<OAuth2AccessToken> findTokensByClientIdAndUserName(String clientId, String userName) {
-        byte[] approvalKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(clientId, userName));
+        byte[] approvalKey = serializeKey(UCREDENTIAL_TO_ACCESS + getApprovalKey(clientId, userName));
         List<byte[]> byteList = null;
         RedisConnection conn = getConnection();
         try {
