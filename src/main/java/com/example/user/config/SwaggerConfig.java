@@ -41,7 +41,7 @@ public class SwaggerConfig {
 //                .tokenRequestEndpoint(
 //                        new TokenRequestEndpoint("http://127.0.0.1:8081/oauth/authorize", "fooClientIdPassword", "secret"))
 //                .build();
-        ResourceOwnerPasswordCredentialsGrant grant = new ResourceOwnerPasswordCredentialsGrant("http://127.0.0.1:8081/auth-service/oauth/token");
+        ResourceOwnerPasswordCredentialsGrant grant = new ResourceOwnerPasswordCredentialsGrant("http://192.168.3.3:8081/auth-service/oauth/token");
 
         SecurityScheme oauth = new OAuthBuilder().name("spring_oauth")
                 .grantTypes(Arrays.asList(grant))

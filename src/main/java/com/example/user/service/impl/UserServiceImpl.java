@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         String username = registerInfo.getUsername();
         User user = userAccountMapper.selectByUsername(registerInfo.getUsername());
         if (null != user) {
-            return ResponseEntity.status(400).body(String.format("已有用户%s！", username));
+            return ResponseEntity.badRequest().body(String.format("已有用户%s！", username));
         }
         registerInfo.setCreateDate(new Date());
         registerInfo.setCreator(registerInfo.getUsername());
@@ -44,5 +44,17 @@ public class UserServiceImpl implements UserService {
     public List<User> queryAll() {
         List<User> allUsers = userAccountMapper.selectAllUsers();
         return allUsers;
+    }
+
+    @Override
+    public User queryUserByPhoneNum(String principal) {
+        return userAccountMapper.selectByPhoneNum(principal);
+    }
+
+    @Override
+    public User addUserByPhoneNum(User user) {
+        userAccountMapper.insert(user);
+        userAccountMapper.relateRole(user.getId(), 2);
+        return user;
     }
 }

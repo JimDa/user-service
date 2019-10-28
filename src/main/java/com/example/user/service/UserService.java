@@ -11,4 +11,8 @@ public interface UserService {
     ResponseEntity<String> register(User registerInfo);
 
     List<User> queryAll();
+
+    User queryUserByPhoneNum(String principal);
+
+    User addUserByPhoneNum(User user);
 }

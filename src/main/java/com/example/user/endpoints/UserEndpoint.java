@@ -11,11 +11,13 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import vo.LoginRequestVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 
 @RequestMapping("/user")
 @RestController
@@ -29,6 +31,8 @@ public class UserEndpoint {
     private RevokeAuthClient revokeAuthClient;
     @Autowired
     private IAlismsService iAlismsService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping(value = "/register")
     @ApiOperation("注册")
@@ -39,6 +43,16 @@ public class UserEndpoint {
     @PostMapping(value = "/login")
     @ApiOperation("登入")
     public ResponseEntity<OAuthToken> getToken(@RequestBody @Valid LoginRequestVo loginInfo) {
+        if ("verify_code".equals(loginInfo.getLoginType())) {
+            User user = userService.queryUserByPhoneNum(loginInfo.getPrincipal());
+            if (null == user) {
+                user = new User();
+                user.setPhoneNum(loginInfo.getPrincipal());
+                user.setCreateDate(new Date());
+                user.setCreator(loginInfo.getPrincipal());
+                userService.addUserByPhoneNum(user);
+            }
+        }
         String tokenStr = Base64.encodeBase64String(("fooClientIdPassword" + ":" + "secret").getBytes());
         OAuthToken token = authClient.getToken("multi", loginInfo.getPrincipal(), loginInfo.getCredentials(), loginInfo.getLoginType(), "Basic " + tokenStr);
         return ResponseEntity.ok(token);
