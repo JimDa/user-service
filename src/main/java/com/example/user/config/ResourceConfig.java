@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -37,6 +38,11 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         // @formatter:off
         http.httpBasic()
                 .and()
+                .csrf()// 由于使用的是JWT，我们这里不需要csrf(jwt天然防止csrf)
+                .disable()
+                .sessionManagement()// 基于token，所以不需要session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
                 .antMatchers(
                         "/user/**",
@@ -48,8 +54,6 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
-                .and()
-                .csrf().disable()
 //                .logout()
 //                .logoutUrl("/logout")
 //                .logoutSuccessHandler(customLogoutHandler)
